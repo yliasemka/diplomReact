@@ -1,17 +1,25 @@
 
 interface CharacterResponse {
-    id: number;
-    name: string;
-    description: string;
-    modified: string;
+    id: number | null,
+    name: string,
+    description: string,
+    modified: string,
     thumbnail: {
-        path: string;
-        extension: string;
-    };
+        path: string,
+        extension: string,
+    },
     urls: Array<{
         type: string,
         url:string
-    }>
+    }>,
+    comics: ComicsProps[]
+}
+
+interface ComicsProps {
+    item:{
+        resourceURL:string,
+        name:string
+    }
 }
 
 class MarvelService {
@@ -36,11 +44,11 @@ class MarvelService {
 
     getAllCharacters = async (ofset:number) => {
         const res = await this.getResource(`${this._API_BASE}characters?limit=9&offset=${ofset}&${this._API_KEY}`)
-        console.log(res)
         return res.data.results.map(this._transformCharacter)
     } 
 
-    getCharacter = async (id:number) => {
+    getCharacter = async (id:number | null) => {
+        console.log(id)
         const res = await this.getResource(`${this._API_BASE}characters/${id}?${this._API_KEY}`)
         return this._transformCharacter(res.data.results[0])
     }
@@ -53,6 +61,7 @@ class MarvelService {
             thumbnail:char.thumbnail.path + '.' + char.thumbnail.extension,
             homepage:char.urls[0].url,
             wiki:char.urls[1].url,
+            comics: char.comics
         }
     }
 }
