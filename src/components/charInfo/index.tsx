@@ -45,11 +45,11 @@ class CharInfo extends Component<CharInfoProps> {
     }
 
     changeCharInfo = (char:any) => {
-        console.log(char)
         this.setState({char:char})
     }
 
     updateCharInfo = () => {
+        
         const {charId} = this.props 
         if (!charId){
             return
@@ -59,7 +59,6 @@ class CharInfo extends Component<CharInfoProps> {
             .getCharacter(charId)
             .then(this.onCharLoaded)
             .catch(this.onError)
-        
     }   
     
     componentDidMount(): void {

@@ -10,7 +10,7 @@ interface ErrorInfo {
 }
 
 const Error = (info:ErrorInfo) => {
-        const {info: {message, status, code} } = info
+    const {info: {message, status, code} } = info
     return(
         <div className='error'>
             <img src={spider} alt="error_img" className="error_img" />

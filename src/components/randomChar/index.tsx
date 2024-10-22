@@ -65,7 +65,6 @@ class  RandomChar extends Component<{}> {
     }
 
     updateChar = () => {
-        console.log('update')
         this.changeChar()
         const id:number = Math.floor(Math.random() * (1011400 - 1011000) + 1011000)
         this.marvelResponse
@@ -74,10 +73,8 @@ class  RandomChar extends Component<{}> {
             .catch(this.onError) 
     }
 
-    
 
     render() {
-        console.log('render')
         const {char, loading, error} = this.state
         const load = loading ? <Spinner/> : null
         const errorMessage = error.value ? <Error info={error.info}/> : null
