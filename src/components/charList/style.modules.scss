@@ -19,7 +19,7 @@
         height: 318px;
         background-color: $dark;
         box-shadow: 5px 5px 10px rgba(0, 0, 0, .25);
-        padding: 15px;
+        padding:15px 15px;
         cursor: pointer;
         transition: 0.3s transform;
         img {
@@ -29,8 +29,17 @@
             transform: translate(-15px, -15px);
         }
         &_selected {
+            img {
+                width: 200px;
+                height: 200px;
+                transform: translate(-15px, -15px);
+            }
+            
             box-shadow: 0 5px 20px $main-color;
+            background-color: $dark;
+            transition: 0.3s transform;
             transform: translateY(-8px);
+            padding: 15px;
         }
     }
     &__name {

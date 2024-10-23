@@ -1,12 +1,16 @@
-import { Component, ErrorInfo } from "react"
+import { Component} from "react"
 
-class ErrorBoundary extends Component {
+interface Props {
+    children: React.ReactNode; // Тип для дочерних элементов
+}
+
+class ErrorBoundary extends Component<Props> {
 
     state = {
         error: false
     }
 
-    componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
+    componentDidCatch(): void {
         this.setState({error:true})
     }
 

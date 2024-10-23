@@ -31,7 +31,8 @@ interface ListState {
     },
     newLoading:boolean,
     offset: number,
-    charEnded: boolean
+    charEnded: boolean,
+    activId: number | null
 }
 
 interface PropsChar {
@@ -53,9 +54,12 @@ class CharList extends Component<PropsChar, ListState> {
         },
         newLoading: false,
         offset:210,
-        charEnded:false
+        charEnded:false,
+        activId: null
 
     }
+
+    
 
     marvelResponse = new MarvelService()
 
@@ -97,6 +101,10 @@ class CharList extends Component<PropsChar, ListState> {
         
     }
 
+    setIsActive = (id: number) => {
+        this.setState({activId:id})
+    }
+
     /* componentDidMount(): void {
         this.onRequest()
         window.addEventListener('scroll', this.scrollList)
@@ -120,10 +128,11 @@ class CharList extends Component<PropsChar, ListState> {
 
     render() {
 
-        const {char, loading, error, newLoading, offset, charEnded} = this.state
+        const {char, loading, error, newLoading, offset, charEnded, activId} = this.state
         const { onCharSelected } = this.props
         const load = loading ? <Spinner/> : null
         const errorMes = error.value ? <Error info={error.info}/> : null
+        console.log("activeid",activId)
         return (
             <div className="char__list">
                 {errorMes}
@@ -131,7 +140,8 @@ class CharList extends Component<PropsChar, ListState> {
                 <ul className="char__grid">
                     {char.map((item) => {
                         const {id} = item
-                        return (<ListItem key={id} char={item} onCharSelected={() => onCharSelected(id)}/>)
+                        console.log(id)
+                        return (<ListItem key={id} char={item} onCharSelected={() => onCharSelected(id)} isActive={activId === id} setIsActive={this.setIsActive}/>)
                     })}
                 </ul>
                 <button 
@@ -147,21 +157,43 @@ class CharList extends Component<PropsChar, ListState> {
 }
 
 interface ListItemProps extends CharObj {
+    isActive:boolean,
+    setIsActive: (id:number) => void,
     onCharSelected: (id:number) => void
 }
 
-
-const ListItem = ({char:{id, name, thumbnail}, onCharSelected}:ListItemProps) => {
-    let imgStyle: React.CSSProperties = {objectFit : 'cover'};
-    if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
-        imgStyle = {objectFit : 'contain'};
-    }
-    return(
-        <li className="char__item"  onClick={() => onCharSelected(id)}>
-            <img src={thumbnail}  alt={name} style={imgStyle}/>
-            <div className="char__name">{name}</div>
-        </li>
-    )
+interface ListItemState {
+    click:boolean
 }
+
+class ListItem extends Component<ListItemProps, ListItemState> {
+
+    
+    render() {
+
+        const {char:{id, name, thumbnail}, onCharSelected, isActive, setIsActive} = this.props
+        let imgStyle: React.CSSProperties = {objectFit : 'cover'};
+        if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+            imgStyle = {objectFit : 'contain'};
+        }
+
+        
+        const select = () => {
+            onCharSelected(id)
+        }
+
+        const handleClick = () => {
+            select()
+            setIsActive(id)
+        }
+
+        return(
+            <li className={isActive ? "char__item_selected" : "char__item"}  onClick={handleClick}>
+                <img src={thumbnail}  alt={name} style={imgStyle}/>
+                <div className="char__name">{name}</div>
+            </li>
+        )
+    }
+}   
 
 export default CharList

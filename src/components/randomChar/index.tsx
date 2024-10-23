@@ -56,7 +56,7 @@ class  RandomChar extends Component<{}> {
     }
 
     onCharLoaded = (char:CharObj) =>{
-        this.setState({char, loading:false})
+        this.setState({char, loading:false, error:{value:false}})
     }
 
     changeChar = () => {
