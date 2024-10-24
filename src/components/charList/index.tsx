@@ -1,4 +1,4 @@
-import { Component } from 'react'
+import {  useEffect, useState } from 'react'
 import './style.modules.scss'
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner'
@@ -7,154 +7,136 @@ import Error from '../error'
 
 
 interface CharObj{
-    char: {
         id:number,
         name: string;
         description: string;
         thumbnail: string,
         homepage: string,
         wiki:string
-    }
-    
-}
 
-interface ListState {
-    char: CharObj[],
-    loading:boolean,
-    error: {
-        value:boolean,
-        info:{
-            message:string,
-            status:string,
-            code:number
-        }
-    },
-    newLoading:boolean,
-    offset: number,
-    charEnded: boolean,
-    activId: number | null
+}
+interface ErrorObj {
+    value:boolean,
+    info:{
+        message:string,
+        status:string,
+        code:number
+    }
 }
 
 interface PropsChar {
     onCharSelected: (id:number) => void
 }
 
-class CharList extends Component<PropsChar, ListState> {
+const CharList = (props:PropsChar) =>  {
 
-    state ={
-        char: [],
-        loading: true,
-        error: {
-            value:false,
-            info : {
-                message: '',
-                status:'',
-                code: 0
-            }
-        },
-        newLoading: false,
-        offset:210,
-        charEnded:false,
-        activId: null
-
-    }
-
+    const [char, setChar] = useState<CharObj[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
+    const [error, setError] = useState<ErrorObj>({
+        value:false,
+        info : {
+            message: '',
+            status:'',
+            code: 0
+        }
+    })
+    const [newLoading, setNewLoading] = useState<boolean>()
+    const [offset, setOffSet] = useState<number>(210)
+    const [charEnded, setCharended] = useState<boolean>(false)
+    const [activeId, setActiveId] = useState<null | number>(null)
     
 
-    marvelResponse = new MarvelService()
+    const marvelResponse = new MarvelService()
 
-    onCharListNewLoading = () => {
-        this.setState({newLoading:true})
+    const onCharListNewLoading = () => {
+        setNewLoading(true)
     }
 
-    onCharListLoading = (newChar:CharObj[]) => {
-
+    const onCharListLoading = (newChar:CharObj[]) => {
         let ended = false
         if(newChar.length < 9){
             ended = true
         }
-
-        this.setState(({offset, char}) => ({
-            char: [...char,...newChar], 
-            loading: false, 
-            newLoading:false,
-            offset:offset + 9,
-            charEnded: ended
-        }))
-    }
-    onError = (res:any) => {
-        this.setState({loading:false, error:{value:true, info:res}})
+        setChar([...char, ...newChar])
+        setLoading(false)
+        setNewLoading(false)
+        setOffSet(offset => offset + 9)
+        setCharended(ended)
     }
 
-    componentDidMount(): void {
-        this.onRequest()
+    const onError = (res:any) => {
+        setLoading(false)
+        setError({value:true, info:res})
     }
-    
+
+    useEffect(() => {
+        onRequest()
+    }, [])
 
 
-    onRequest = (offset:number = this.marvelResponse._baseOffSet) =>{
-        this.onCharListNewLoading()
-        this.marvelResponse
-            .getAllCharacters(offset)
-            .then(this.onCharListLoading)
-            .catch(this.onError)
+    const onRequest = (offset:number = marvelResponse._baseOffSet) =>{
+            onCharListNewLoading()
+            marvelResponse
+                .getAllCharacters(offset)
+                .then(onCharListLoading)
+                .catch(onError)
+    }
+
+    const setIsActive = (id: number) => {
+        setActiveId(id)
+    }
+
+    const handleLoadMore = () => {
         
-    }
-
-    setIsActive = (id: number) => {
-        this.setState({activId:id})
-    }
-
-    /* componentDidMount(): void {
-        this.onRequest()
-        window.addEventListener('scroll', this.scrollList)
-    }
-
-    scrollList = () => {
+        if (!newLoading && !charEnded) {
+            onRequest(offset);
+        }
+    };
+/*  const scrollList = () => {
         const windowHeight = document.documentElement.clientHeight
         const documentHeight = document.documentElement.scrollHeight
         const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
 
-        if (windowHeight + scrollTop >= documentHeight - 100 && !this.state.newLoading) {
-            this.onRequest(this.state.offset)
+        if (windowHeight + scrollTop >= documentHeight - 100 && !newLoading) {
+            onRequest(offset)
         }
     }
     
-    componentWillUnmount(): void {
-        window.removeEventListener('scroll', this.scrollList)
-    } */
 
+    useEffect(() => {
+        onRequest()
+        window.addEventListener('scroll', scrollList)
 
-
-    render() {
-
-        const {char, loading, error, newLoading, offset, charEnded, activId} = this.state
-        const { onCharSelected } = this.props
-        const load = loading ? <Spinner/> : null
-        const errorMes = error.value ? <Error info={error.info}/> : null
-        console.log("activeid",activId)
         return (
-            <div className="char__list">
-                {errorMes}
-                {load}
-                <ul className="char__grid">
-                    {char.map((item) => {
-                        const {id} = item
-                        console.log(id)
-                        return (<ListItem key={id} char={item} onCharSelected={() => onCharSelected(id)} isActive={activId === id} setIsActive={this.setIsActive}/>)
-                    })}
-                </ul>
-                <button 
-                    className="button button__main button__long"
-                    disabled={newLoading}
-                    onClick={() => this.onRequest(offset)}
-                    style={{'display': charEnded ? 'none': 'block'}}>
-                    <div className="inner">load more</div>
-                </button>
-            </div>
+            window.removeEventListener('scroll',scrollList)
         )
-    }  
-}
+    }, [newLoading, offset]) */
+
+
+    
+    const load = loading ? <Spinner/> : null
+    const errorMes = error.value ? <Error info={error.info}/> : null
+    return (
+        <div className="char__list">
+            {errorMes}
+            {load}РФ
+            <ul className="char__grid">
+                {char.map((item) => {
+                    const {id} = item
+                    return (<ListItem key={id} {...item} onCharSelected={() => props.onCharSelected(id)} isActive={activeId === id} setIsActive={setIsActive}/>)
+                })}
+            </ul>
+            <button 
+                className="button button__main button__long"
+                disabled={newLoading}
+                onClick={() => handleLoadMore()}
+                style={{'display': charEnded ? 'none': 'block'}}>
+                <div className="inner">load more</div>
+            </button>
+        </div>
+    )
+}  
+
 
 interface ListItemProps extends CharObj {
     isActive:boolean,
@@ -162,16 +144,10 @@ interface ListItemProps extends CharObj {
     onCharSelected: (id:number) => void
 }
 
-interface ListItemState {
-    click:boolean
-}
 
-class ListItem extends Component<ListItemProps, ListItemState> {
+const ListItem = (props:ListItemProps) => {
 
-    
-    render() {
-
-        const {char:{id, name, thumbnail}, onCharSelected, isActive, setIsActive} = this.props
+        const {id, name, thumbnail, onCharSelected, isActive, setIsActive} = props
         let imgStyle: React.CSSProperties = {objectFit : 'cover'};
         if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
             imgStyle = {objectFit : 'contain'};
@@ -193,7 +169,6 @@ class ListItem extends Component<ListItemProps, ListItemState> {
                 <div className="char__name">{name}</div>
             </li>
         )
-    }
-}   
+    }   
 
 export default CharList
