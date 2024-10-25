@@ -13,9 +13,9 @@ import ErrorBoundary from '../errorBoundary'
 const  App = () => {
 
 
-    const [selectChar, setSelectChar] = useState(null)
+    const [selectChar, setSelectChar] = useState<number | null>(null)
 
-    const onCharSelected = (id:any) => {
+    const onCharSelected = (id:number | null) => {
         setSelectChar(id)
     }
 

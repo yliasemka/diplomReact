@@ -1,4 +1,4 @@
-import {  useEffect, useState } from 'react'
+import {useEffect, useState } from 'react'
 import './style.modules.scss'
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner'
@@ -24,13 +24,19 @@ interface ErrorObj {
     }
 }
 
+interface InfoObj {
+    message:string,
+    status:string,
+    code:number
+}
+
 interface PropsChar {
     onCharSelected: (id:number) => void
 }
 
 const CharList = (props:PropsChar) =>  {
 
-    const [char, setChar] = useState<CharObj[]>([])
+    const [char, setChar] = useState<CharObj[] | null >(null)
     const [loading, setLoading] = useState<boolean>(true)
     const [error, setError] = useState<ErrorObj>({
         value:false,
@@ -49,7 +55,7 @@ const CharList = (props:PropsChar) =>  {
     const marvelResponse = new MarvelService()
 
     const onCharListNewLoading = () => {
-        setNewLoading(true)
+        setNewLoading(true);
     }
 
     const onCharListLoading = (newChar:CharObj[]) => {
@@ -57,14 +63,19 @@ const CharList = (props:PropsChar) =>  {
         if(newChar.length < 9){
             ended = true
         }
-        setChar([...char, ...newChar])
+        if (char === null){
+            setChar([...newChar])
+        } else {
+            setChar([...char, ...newChar])
+        }
+        
         setLoading(false)
         setNewLoading(false)
         setOffSet(offset => offset + 9)
         setCharended(ended)
     }
 
-    const onError = (res:any) => {
+    const onError = (res:InfoObj) => {
         setLoading(false)
         setError({value:true, info:res})
     }
@@ -86,12 +97,6 @@ const CharList = (props:PropsChar) =>  {
         setActiveId(id)
     }
 
-    const handleLoadMore = () => {
-        
-        if (!newLoading && !charEnded) {
-            onRequest(offset);
-        }
-    };
 /*  const scrollList = () => {
         const windowHeight = document.documentElement.clientHeight
         const documentHeight = document.documentElement.scrollHeight
@@ -119,17 +124,17 @@ const CharList = (props:PropsChar) =>  {
     return (
         <div className="char__list">
             {errorMes}
-            {load}РФ
+            {load}
             <ul className="char__grid">
-                {char.map((item) => {
+                {char !== null ? char.map((item) => {
                     const {id} = item
                     return (<ListItem key={id} {...item} onCharSelected={() => props.onCharSelected(id)} isActive={activeId === id} setIsActive={setIsActive}/>)
-                })}
+                }) : null}
             </ul>
             <button 
                 className="button button__main button__long"
                 disabled={newLoading}
-                onClick={() => handleLoadMore()}
+                onClick={() => onRequest(offset)}
                 style={{'display': charEnded ? 'none': 'block'}}>
                 <div className="inner">load more</div>
             </button>

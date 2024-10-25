@@ -12,14 +12,16 @@ interface CharacterResponse {
         type: string,
         url:string
     }>,
-    comics: ComicsProps[]
+    comics: ComicsProps
 }
 
 interface ComicsProps {
-    item:{
-        resourceURL:string,
-        name:string
-    }
+    items:Comics[]
+}
+
+interface Comics {
+    resourceURL:string,
+    name:string
 }
 
 class MarvelService {
@@ -29,7 +31,7 @@ class MarvelService {
     _baseOffSet = 210
 
     getResource = async (url:string) => {
-        let res = await fetch(url)
+        const res = await fetch(url)
 
         if (!res.ok) {
             throw  { message: res.statusText,
