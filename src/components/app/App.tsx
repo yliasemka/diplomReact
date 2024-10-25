@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import AppHeader from '../appHeader'
+import AppNavigation from '../appNavigation'
 import RandomChar from '../randomChar'
 import CharList from '../charList'
 import CharInfo from '../charInfo'
 import decoration from '../../resources/vision.png'
 import ErrorBoundary from '../errorBoundary'
+import AppHeader from '../appHeader'
 
 
 
@@ -22,7 +23,10 @@ const  App = () => {
     
     return (
         <div className="app">
-            <AppHeader/>
+            <header>
+                <AppHeader/>
+                <AppNavigation/>
+            </header>
             <main>
                 <RandomChar/>
                 <div className="char__content">

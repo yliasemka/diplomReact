@@ -4,76 +4,16 @@ import {useEffect, useState} from 'react'
 import Spinner from '../spinner'
 import Error from '../error'
 import Skeleton from '../skeleton'
-
-interface CharInfoProps{
-    charId:number | null
-}
-
-interface ErrorObj {
-    value:boolean,
-    info:{
-        message:string,
-        status:string,
-        code:number
-    }
-}
-
-interface ComicsProps {
-    items:Comics[]
-}
-
-interface Comics {
-    resourceURL:string,
-    name:string
-}
-
-interface CharObj{
-    id?:number | null,
-    name: string;
-    description: string;
-    thumbnail: string,
-    homepage: string,
-    wiki:string
-    comics: ComicsProps
-}
-
-
-interface InfoObj {
-    message:string,
-    status:string,
-    code:number
-}
+import { CharInfoProps, CharObj, Comics} from '../../types/interfaces'
 
 const CharInfo = (props:CharInfoProps) => {
 
     const [char, setChar] = useState<CharObj | null>(null)
-    const [loading, setLoading] = useState<boolean>(false)
-    const [error, setError] = useState<ErrorObj>({
-        value:false,
-        info : {
-            message: '',
-            status:'',
-            code: 0
-        }
-        }
-    )
-
-
-    const marvelResponse = new MarvelService()
-
-
-    const onError = (res:InfoObj) => {
-        setLoading(false)
-        setError({value:true, info:res})
-    }
+    const marvelResponse = MarvelService()
+    const {loading, error, getCharacter,clearError} = marvelResponse
 
     const onCharLoaded = (char:CharObj | null) =>{
         setChar(char)
-        setLoading(false)
-    }
-
-    const changeChar = () => {
-        setLoading(true)
     }
 
     const updateCharInfo = () => {
@@ -82,15 +22,12 @@ const CharInfo = (props:CharInfoProps) => {
         if (!charId){
             return
         }
-        changeChar()
-        marvelResponse
-            .getCharacter(charId)
+        clearError()
+        getCharacter(charId)
             .then(onCharLoaded)
-            .catch(onError)
     }   
 
     useEffect(() => {
-        console.log("use effect")
         updateCharInfo()
     }, [props.charId])
 

@@ -4,51 +4,19 @@ import mjolnir from '../../resources/mjolnir.png'
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner';
 import Error from '../error';
-
-interface CharObj{
-    name?: string ;
-    description?: string ;
-    thumbnail?: string,
-    homepage?: string,
-    wiki?:string
-}
+import { CharObj, CharOdjId} from '../../types/interfaces';
 
 
-interface InfoObj {
-    message:string,
-    status:string,
-    code:number
-}
+
 
 const RandomChar = () => {
     
     const [char, setChar] = useState<CharObj | null>(null)
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState({
-        value:false,
-            info : {
-                message: '',
-                status:'',
-                code: 0
-            }
-    })
-
-    const marvelResponse = new MarvelService() 
-
-    const onError = (res:InfoObj) => {
-        setLoading(false)
-        setError({value:true, info:res})
-    }
+    const marvelResponse = MarvelService() 
+    const {loading, error, getCharacter, clearError} = marvelResponse
 
     const onCharLoaded = (char:CharObj | null) =>{
-        console.log("update char")
         setChar(char)
-        setLoading(false)
-    }
-
-    const changeChar = () => {
-        setLoading(true)
-        
     }
 
     useEffect(() => {
@@ -56,17 +24,14 @@ const RandomChar = () => {
     }, [])
 
     const updateChar = () => {
-        console.log("upppppp")
-        changeChar()
-        setError({value:false, info:{message:'', status:'', code:0}})
         const id:number = Math.floor(Math.random() * (1011400 - 1011000) + 1011000)
-        marvelResponse
-            .getCharacter(id)
+        clearError()
+        getCharacter(id)
             .then(onCharLoaded)
-            .catch(onError) 
     }
 
     const load = loading ? <Spinner/> : null
+    console.log(error)
     const errorMessage = error.value ? <Error info={error.info}/> : null
     const content =  !(load || errorMessage) ? <View {...char}/> : null
     return (
@@ -92,7 +57,7 @@ const RandomChar = () => {
 
 }
 
-const View = (char:CharObj) => {
+const View = (char:CharOdjId) => {
     const {name, description,thumbnail,homepage, wiki} = char
     let imgStyle:  React.CSSProperties = {objectFit : 'cover'};
     if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {

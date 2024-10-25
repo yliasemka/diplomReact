@@ -3,56 +3,21 @@ import './style.modules.scss'
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner'
 import Error from '../error'
+import { CharObj, PropsChar } from '../../types/interfaces';
 
-
-
-interface CharObj{
-        id:number,
-        name: string;
-        description: string;
-        thumbnail: string,
-        homepage: string,
-        wiki:string
-
-}
-interface ErrorObj {
-    value:boolean,
-    info:{
-        message:string,
-        status:string,
-        code:number
-    }
-}
-
-interface InfoObj {
-    message:string,
-    status:string,
-    code:number
-}
-
-interface PropsChar {
-    onCharSelected: (id:number) => void
-}
 
 const CharList = (props:PropsChar) =>  {
 
     const [char, setChar] = useState<CharObj[] | null >(null)
-    const [loading, setLoading] = useState<boolean>(true)
-    const [error, setError] = useState<ErrorObj>({
-        value:false,
-        info : {
-            message: '',
-            status:'',
-            code: 0
-        }
-    })
-    const [newLoading, setNewLoading] = useState<boolean>()
+    const [newLoading, setNewLoading] = useState<boolean>(false)
     const [offset, setOffSet] = useState<number>(210)
     const [charEnded, setCharended] = useState<boolean>(false)
     const [activeId, setActiveId] = useState<null | number>(null)
     
 
-    const marvelResponse = new MarvelService()
+    const marvelResponse = MarvelService()
+
+    const {loading, error, getAllCharacters, _baseOffSet, clearError} = marvelResponse
 
     const onCharListNewLoading = () => {
         setNewLoading(true);
@@ -68,32 +33,24 @@ const CharList = (props:PropsChar) =>  {
         } else {
             setChar([...char, ...newChar])
         }
-        
-        setLoading(false)
         setNewLoading(false)
         setOffSet(offset => offset + 9)
         setCharended(ended)
     }
-
-    const onError = (res:InfoObj) => {
-        setLoading(false)
-        setError({value:true, info:res})
-    }
-
+    
     useEffect(() => {
         onRequest()
     }, [])
 
 
-    const onRequest = (offset:number = marvelResponse._baseOffSet) =>{
+    const onRequest = (offset:number = _baseOffSet) =>{
             onCharListNewLoading()
-            marvelResponse
-                .getAllCharacters(offset)
+            clearError()
+            getAllCharacters(offset)
                 .then(onCharListLoading)
-                .catch(onError)
     }
 
-    const setIsActive = (id: number) => {
+    const setIsActive = (id: number | null) => {
         setActiveId(id)
     }
 
@@ -121,6 +78,8 @@ const CharList = (props:PropsChar) =>  {
     
     const load = loading ? <Spinner/> : null
     const errorMes = error.value ? <Error info={error.info}/> : null
+    console.log(error)
+    console.log(newLoading)
     return (
         <div className="char__list">
             {errorMes}
@@ -133,7 +92,7 @@ const CharList = (props:PropsChar) =>  {
             </ul>
             <button 
                 className="button button__main button__long"
-                disabled={newLoading}
+                disabled={error.value ? false : newLoading}
                 onClick={() => onRequest(offset)}
                 style={{'display': charEnded ? 'none': 'block'}}>
                 <div className="inner">load more</div>
@@ -145,8 +104,8 @@ const CharList = (props:PropsChar) =>  {
 
 interface ListItemProps extends CharObj {
     isActive:boolean,
-    setIsActive: (id:number) => void,
-    onCharSelected: (id:number) => void
+    setIsActive: (id:number | null ) => void,
+    onCharSelected: (id:number | null) => void
 }
 
 
