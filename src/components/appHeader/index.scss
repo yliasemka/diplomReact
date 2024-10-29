@@ -1,9 +1,12 @@
-.header{
+.app__header {
     display: block;
     margin: 0 auto;
     height: 70px;
-    &-img{
-        width: 200px;
-        height: 150px;
+    position: relative;
+
+    &-img {
+        display: block;
+        margin: 0 auto;
+        height: 100%;
     }
 }

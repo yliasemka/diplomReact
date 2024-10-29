@@ -30,6 +30,7 @@ const useHttp = () => {
             setLoading(false)
             return data
             
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch(e:any){
             setLoading(false)
             setError({value:true, info:{message: e.message,status: 'Error', code: e.code}})

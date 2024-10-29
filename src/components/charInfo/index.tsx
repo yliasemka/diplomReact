@@ -29,6 +29,7 @@ const CharInfo = (props:CharInfoProps) => {
 
     useEffect(() => {
         updateCharInfo()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [props.charId])
 
     const skeleton = char || loading || error.value ? null : <Skeleton/>

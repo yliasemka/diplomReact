@@ -1,11 +1,11 @@
 import './index.scss'
-import avengersLogo from '../../resources/Avengers_logo.png'
+import marvelLogo from '../../resources/2362648_5ad0c.png'
 
 const AppHeader = () => {
     return(
         <>  
-            <div className='header'>
-                <img src={avengersLogo} alt="marvel-logo" className="header-img" />
+            <div className='app__header'>
+                <img src={marvelLogo} alt="marvel-logo" className="app__header-img" />
             </div>
         </>
     )

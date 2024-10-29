@@ -6,6 +6,7 @@ import CharInfo from '../charInfo'
 import decoration from '../../resources/vision.png'
 import ErrorBoundary from '../errorBoundary'
 import AppHeader from '../appHeader'
+import Slider from '../slider'
 
 
 
@@ -27,7 +28,8 @@ const  App = () => {
                 <AppHeader/>
                 <AppNavigation/>
             </header>
-            <main>
+            <Slider/>
+            <main>   
                 <RandomChar/>
                 <div className="char__content">
                     <ErrorBoundary>

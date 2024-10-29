@@ -1,6 +1,7 @@
 @use './variables' as *;
 @use './button' as *;
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css');
 
 
 * {
@@ -31,6 +32,7 @@ a {
     text-decoration: none;
     color: inherit;
     display: inline-block;
+
     &:hover {
         text-decoration: none;
         color: inherit;
@@ -45,17 +47,17 @@ p {
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    margin: 0; 
+    margin: 0;
 }
 
 .app {
-    width:100%;
+    width: 100%;
     position: relative;
 }
 
-header{
+header {
     background-color: #0f0f0f;
-    
+
 }
 
 main {
@@ -64,6 +66,7 @@ main {
     margin: 0 auto;
     padding: 50px 0 50px 0;
     position: relative;
+
     .bg-decoration {
         position: absolute;
         right: -50px;
@@ -81,9 +84,11 @@ main {
     0% {
         opacity: 1
     }
+
     50% {
         opacity: .4
     }
+
     100% {
         opacity: 1
     }
