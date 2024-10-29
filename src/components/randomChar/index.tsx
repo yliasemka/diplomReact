@@ -4,7 +4,7 @@ import mjolnir from '../../resources/mjolnir.png'
 import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner';
 import Error from '../error';
-import { CharObj, CharOdjId} from '../../types/interfaces';
+import { CharObj, CharOdjId} from '../../types/interfaces/general';
 
 
 

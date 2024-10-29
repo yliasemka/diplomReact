@@ -1,31 +1,8 @@
 import useHttp from "../hooks/http.hook"
+import { CharacterResponse } from "../types/interfaces/character"
+import { ComicsResponse } from "../types/interfaces/comics"
 
-interface CharacterResponse {
-    id: number | null,
-    name: string,
-    description: string,
-    modified: string,
-    thumbnail: {
-        path: string,
-        extension: string,
-    },
-    urls: Array<{
-        type: string,
-        url:string
-    }>,
-    comics: ComicsProps
-}
-
-interface ComicsProps {
-    items:Comics[]
-}
-
-interface Comics {
-    resourceURL:string,
-    name:string
-}
-
-const MarvelService = () => {
+const useMarvelService = () => {
 
     const {loading, error, request, clearError} = useHttp()
 
@@ -55,7 +32,33 @@ const MarvelService = () => {
         }
     }
 
-    return {loading, error, getAllCharacters, getCharacter, clearError, _baseOffSet}
+    const getAllComics = async (ofset:number = 0) => {
+        const res = await request(`${_API_BASE}comics?orderBy=issueNumber&limit=8&offset=${ofset}&${_API_KEY}`)
+        return res.data.results.map(_transformComics)
+    }
+
+    const getComics = async (id:number | null) => {
+		const res = await request(`${_API_BASE}comics/${id}?${_API_KEY}`)
+		return _transformComics(res.data.results[0]);
+	};
+
+    const _transformComics = (comics:ComicsResponse) => {
+		return {
+			id: comics.id,
+			title: comics.title,
+			description: comics.description || "There is no description",
+			pageCount: comics.pageCount
+				? `${comics.pageCount} p.`
+				: "No information about the number of pages",
+			thumbnail: comics.thumbnail.path + "." + comics.thumbnail.extension,
+			language: comics.textObjects[0]?.language || "en-us",
+			price: comics.prices[0].price
+				? `${comics.prices[0].price}$`
+				: "not available",
+		}
+	}
+
+    return {loading, error, getAllCharacters, getCharacter, getAllComics, getComics, clearError, _baseOffSet}
 }
 
-export default MarvelService 
+export default useMarvelService 

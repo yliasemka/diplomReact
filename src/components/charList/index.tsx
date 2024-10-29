@@ -1,9 +1,9 @@
 import {useEffect, useState } from 'react'
 import './style.modules.scss'
-import MarvelService from '../../services/MarvelServices';
+import useMarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner'
 import Error from '../error'
-import { CharObj, PropsChar } from '../../types/interfaces';
+import { CharObj, PropsChar } from '../../types/interfaces/character';
 
 
 const CharList = (props:PropsChar) =>  {
@@ -15,7 +15,7 @@ const CharList = (props:PropsChar) =>  {
     const [activeId, setActiveId] = useState<null | number>(null)
     
 
-    const marvelResponse = MarvelService()
+    const marvelResponse = useMarvelService()
 
     const {loading, error, getAllCharacters, _baseOffSet, clearError} = marvelResponse
 
@@ -79,8 +79,7 @@ const CharList = (props:PropsChar) =>  {
     
     const load = loading ? <Spinner/> : null
     const errorMes = error.value ? <Error info={error.info}/> : null
-    console.log(error)
-    console.log(newLoading)
+    console.log('charList')
     return (
         <div className="char__list">
             {errorMes}

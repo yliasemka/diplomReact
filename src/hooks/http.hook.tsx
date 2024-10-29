@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { ErrorObj } from "../types/interfaces";
+import { ErrorObj } from "../types/interfaces/general";
 
 
 
