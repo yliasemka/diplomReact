@@ -1,6 +1,6 @@
 import {useEffect, useState } from 'react'
 import './style.modules.scss'
-import useMarvelService from '../../services/MarvelServices';
+import MarvelService from '../../services/MarvelServices';
 import Spinner from '../spinner'
 import Error from '../error'
 import { CharObj, PropsChar } from '../../types/interfaces/character';
@@ -15,7 +15,7 @@ const CharList = (props:PropsChar) =>  {
     const [activeId, setActiveId] = useState<null | number>(null)
     
 
-    const marvelResponse = useMarvelService()
+    const marvelResponse = MarvelService()
 
     const {loading, error, getAllCharacters, _baseOffSet, clearError} = marvelResponse
 

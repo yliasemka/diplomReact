@@ -18,11 +18,7 @@
 
             li {
                 margin: 0 15px;
-
-                a {
-                    color: $white;
-                }
-
+                color: $white;
                 a:hover {
                     transition: 0.3s;
                     color: $main-color;

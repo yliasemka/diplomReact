@@ -1,4 +1,4 @@
-import './index.scss'
+import './style.modules.scss'
 import marvelLogo from '../../resources/2362648_5ad0c.png'
 
 const AppHeader = () => {

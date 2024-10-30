@@ -4,7 +4,8 @@ import {useEffect, useState} from 'react'
 import Spinner from '../spinner'
 import Error from '../error'
 import Skeleton from '../skeleton'
-import { CharInfoProps, CharObj, Comics} from '../../types/interfaces/general'
+import { CharInfoProps, CharObj} from '../../types/interfaces/character'
+import { Comics } from '../../types/interfaces/comics'
 
 const CharInfo = (props:CharInfoProps) => {
 

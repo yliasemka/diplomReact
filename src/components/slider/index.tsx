@@ -1,4 +1,4 @@
-import './index.scss'
+import './style.modules.scss'
 import SliderServices from '../../services/SliderServices'
 import { useEffect, useState } from 'react'
 

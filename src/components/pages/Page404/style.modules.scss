@@ -1,0 +1,25 @@
+.error {
+    &__page {
+        display: flex;
+        justify-content: space-between;
+        &-content {
+            display: flex;
+            flex-direction: column;
+            width: 40%;
+            justify-content: center;
+        };
+        &-img{
+            position: relative;
+            width: 50%;
+        };
+        &-gif {
+            border-radius: 10px;
+            width: 100%;
+        }
+        &-header, &-subheader{
+            margin-bottom: 50px;
+        }
+    };
+    
+
+}

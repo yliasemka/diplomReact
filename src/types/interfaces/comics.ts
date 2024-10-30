@@ -21,7 +21,7 @@ export interface ComicsResponse {
         language:string
     }>,
     prices: Array<{
-        price:Float64Array
+        price:any
     }>
 }
 
@@ -29,8 +29,8 @@ export interface ComicsObj {
     id:number,
     title:string,
     description: string,
-    pageCount:number,
+    pageCount:string,
     thumbnail:string,
     language:string,
-    price: Float64Array
+    price: any
 }

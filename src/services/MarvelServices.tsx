@@ -2,7 +2,7 @@ import useHttp from "../hooks/http.hook"
 import { CharacterResponse } from "../types/interfaces/character"
 import { ComicsResponse } from "../types/interfaces/comics"
 
-const useMarvelService = () => {
+const MarvelService = () => {
 
     const {loading, error, request, clearError} = useHttp()
 
@@ -61,4 +61,4 @@ const useMarvelService = () => {
     return {loading, error, getAllCharacters, getCharacter, getAllComics, getComics, clearError, _baseOffSet}
 }
 
-export default useMarvelService 
+export default MarvelService 
